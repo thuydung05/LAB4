@@ -2,7 +2,6 @@
 #include "bktpool.h"
 #define STRESS_TEST
 
-
 void timer_handler(int signum) {
     static int taskid = 0;
     static int wrkid = 0;
