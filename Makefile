@@ -1,6 +1,6 @@
 all: main
 
-CFLAGS= -pthread -fcommon -g
+CFLAGS= -pthread -fcommon
 CC=gcc $(CFLAGS)
 
 main: bkwrk bktask bktpool

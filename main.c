@@ -1,30 +1,8 @@
 #include <stdio.h>
 #include "bktpool.h"
-#define STRESS_TEST
+#include <unistd.h>
 
-void timer_handler(int signum) {
-    static int taskid = 0;
-    static int wrkid = 0;
-    assign_task_async(taskid, wrkid);
-    taskid++;
-    wrkid = (wrkid + 1) % MAX_WORKER; // Đảm bảo luân phiên qua các worker
-}
-
-void assign_task_async(unsigned int taskid, unsigned int wrkid) {
-    if (wrkid_busy[wrkid] == 0) {
-        wrkid_busy[wrkid] = 1;  // Đánh dấu worker là đang bận
-        struct bktask_t *task = bktask_get_byid(taskid);
-        if (task != NULL) {
-            worker[wrkid].func = task->func;
-            worker[wrkid].arg = task->arg;
-            worker[wrkid].bktaskid = task->bktaskid;
-            printf("Assigned task %d to worker %d asynchronously\n", taskid, wrkid);
-            kill(wrkid_tid[wrkid], SIGUSR1);  // Gửi tín hiệu để kích hoạt worker
-        }
-    } else {
-        printf("Worker %d is busy, task %d will be retried later\n", wrkid, taskid);
-    }
-}
+//#undef STRESS_TEST
 
 int func(void * arg) {
   int id = * ((int * ) arg);
@@ -36,10 +14,6 @@ int func(void * arg) {
 }
 
 int main(int argc, char * argv[]) {
-
-   signal(SIGALRM, timer_handler);
-    alarm(1);  // Kích hoạt timer handler mỗi giây
-    
   int tid[15];
   int wid[15];
   int id[15];

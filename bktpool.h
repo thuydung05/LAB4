@@ -2,9 +2,8 @@
 #define BKTPOOL_H
 
 #include <stdlib.h>
-#include <signal.h>
+
 #include <pthread.h>
-#include <unistd.h>
 
 #define MAX_WORKER 10
 #define WRK_THREAD 1
@@ -47,11 +46,9 @@ int bktask_init(unsigned int * bktaskid, void * func, void * arg);
 int bktask_assign_worker(unsigned int bktaskid, unsigned int wrkid);
 
 /* bkwrk module */
-int bkwrk_worker(void * arg);
+void * bkwrk_worker(void * arg);
 int bkwrk_create_worker();
 int bkwrk_dispatch_worker(unsigned int wrkid);
 int bkwrk_get_worker();
 
-void timer_handler(int signum);
-void assign_task_async(unsigned int taskid, unsigned int wrkid);
 #endif
